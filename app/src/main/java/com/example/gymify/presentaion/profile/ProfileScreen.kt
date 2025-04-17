@@ -2,6 +2,7 @@ package com.example.gymify.presentaion.profile
 
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -17,6 +18,7 @@ import androidx.navigation.NavHostController
 import com.example.gymify.presentaion.navigation.Screen
 import com.example.gymify.presentaion.profile.components.ProfileItem
 import com.example.gymify.presentaion.profile.components.ProfileToggleItem
+import com.example.gymify.ui.theme.*
 
 @Composable
 fun ProfileScreen(
@@ -26,19 +28,23 @@ fun ProfileScreen(
     onManagePlansClick: () -> Unit = {},
     onLogOutClick: () -> Unit = {}
 ) {
-
-
+    val context = LocalContext.current
     var notificationsEnabled by remember { mutableStateOf(true) }
     var darkModeEnabled by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     Column(
         modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         // Header
-        Text("Profile", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text(
+            "Profile",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
         Spacer(Modifier.height(20.dp))
 
         // User Info Card
@@ -48,18 +54,27 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(Modifier.padding(16.dp)) {
-                Text("Kareem", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    "Omar",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
                 Spacer(Modifier.height(8.dp))
-                Text("Height: 180 cm")
-                Text("Weight: 94 kg")
-                Text("BMI: 29.0", color = Color.Gray)
+                Text("Height: 180 cm", color = MaterialTheme.colorScheme.onBackground)
+                Text("Weight: 94 kg", color = MaterialTheme.colorScheme.onBackground)
+                Text("BMI: 29.0", color = TextGray)
 
                 Spacer(Modifier.height(12.dp))
 
-                Button(onClick = {
-                    Toast.makeText(context, "Edit Info Clicked", Toast.LENGTH_SHORT).show()
-                }) {
-                    Text("Edit Info")
+                Button(
+                    onClick = { /* Handle edit info click */ },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Purple40,
+                        contentColor = TextLight
+                    )
+                ) {
+                    Text("Edit Info", color = TextLight)
                 }
             }
         }
