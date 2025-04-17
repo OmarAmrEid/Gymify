@@ -57,17 +57,32 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import com.example.gymify.data.local.appDataBase.ExerciseEntity
 import com.example.gymify.data.local.planDB.PlanExerciseEntity
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Card
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Text
+import androidx.compose.foundation.clickable
+import java.text.SimpleDateFormat
+import java.util.*
+import com.example.gymify.presentaion.plan.PlanViewModel
 
 
 @Composable
 fun ExercisesScreen(
     modifier: Modifier = Modifier,
-    viewModel: ExcersisecViewModel = hiltViewModel(),
+    exerciseViewModel: ExcersisecViewModel = hiltViewModel(),
+    planViewModel: PlanViewModel = hiltViewModel(),
     navController: NavController,
     onExerciseClick: (ExcersiceItem) -> Unit = {},
 ) {
-    val exercisesItems by viewModel.exerciseList.observeAsState(emptyList())
-    val error by viewModel.errorMessage.observeAsState()
+    val exercisesItems by exerciseViewModel.exerciseList.observeAsState(emptyList())
+    val error by exerciseViewModel.errorMessage.observeAsState()
+
+    val planExercises by planViewModel.planExercises.observeAsState(emptyList())
+    val groupedByDay = planExercises.groupBy { it.day }
 
     var selectedFilter by remember { mutableStateOf("All") }
     var searchQuery by remember { mutableStateOf("") }
@@ -78,24 +93,13 @@ fun ExercisesScreen(
         matchesFilter && matchesSearch
     }
 
+    LaunchedEffect(Unit) {
+        planViewModel.loadPlan()
+    }
+
+    val currentDay = getCurrentDay()
+
     Column(modifier.fillMaxSize().padding(16.dp)) {
-        // Greeting Section
-        Text(
-            text = "Hello Azeem,",
-            style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        )
-        Text(
-            text = "Good morning.",
-            style = MaterialTheme.typography.bodyLarge.copy(
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
         // Today Workout Plan Section
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -108,7 +112,7 @@ fun ExercisesScreen(
                 )
             )
             Text(
-                text = "Mon 26 Apr",
+                text = getCurrentDate(),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -116,6 +120,52 @@ fun ExercisesScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Display Today's Workout Plan using LazyRow
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 4.dp)
+        ) {
+            groupedByDay[currentDay]?.forEach { exercise ->
+                item {
+                    Card(
+                        modifier = Modifier
+                            .width(300.dp)
+                            .height(180.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF222222)),
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            // Placeholder for exercise image
+                            AsyncImage(
+                                model = exercise.gifUrl,
+                                contentDescription = exercise.name,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp),
+                                verticalArrangement = Arrangement.Bottom
+                            ) {
+                                Text(
+                                    text = exercise.name,
+                                    style = MaterialTheme.typography.titleMedium.copy(
+                                        color = MaterialTheme.colorScheme.onBackground
+                                    )
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Workout Categories Section
         Row(
@@ -128,15 +178,19 @@ fun ExercisesScreen(
                     color = MaterialTheme.colorScheme.onBackground
                 )
             )
-            Text(
-                text = "See All",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Search Bar
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { searchQuery = it },
+            label = { Text("Search exercises") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Category Chips
         Row(
@@ -165,58 +219,60 @@ fun ExercisesScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Featured Workout Card
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF222222)),
+        // Featured Workouts Row
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(horizontal = 4.dp)
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                // Placeholder for featured workout image
-                AsyncImage(
-                    model = "https://example.com/featured-workout.jpg",
-                    contentDescription = "Featured Workout",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-
-                Column(
+            items(count = filteredExercises.size) { index ->
+                val exercise = filteredExercises[index]
+                Card(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Bottom
+                        .width(300.dp)
+                        .height(180.dp)
+                        .clickable { onExerciseClick(exercise) },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF222222)),
                 ) {
-                    Text(
-                        text = "Learn the Basic of Training",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.onPrimary
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        // Placeholder for exercise image
+                        AsyncImage(
+                            model = exercise.gifUrl,
+                            contentDescription = exercise.name,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
                         )
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "06 Workouts for Beginner",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    )
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            Text(
+                                text = exercise.name,
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    color = MaterialTheme.colorScheme.onBackground
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+                    }
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Exercises Grid
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(filteredExercises) { exercise ->
-                ExerciseCard(exercise = exercise, onExerciseClick = onExerciseClick)
-            }
-        }
     }
+}
+
+// Function to get current date in "Mon 26 Apr" format
+fun getCurrentDate(): String {
+    val dateFormat = SimpleDateFormat("EEE dd MMM", Locale.getDefault())
+    return dateFormat.format(Date())
+}
+
+// Function to get current day in "Monday" format
+fun getCurrentDay(): String {
+    val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+    return dayFormat.format(Date())
 }
