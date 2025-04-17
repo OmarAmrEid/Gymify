@@ -20,37 +20,37 @@ import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
 import com.example.gymify.domain.models.ExcersiceItem
 import dagger.hilt.android.qualifiers.ApplicationContext
+import androidx.compose.material3.*
+import androidx.compose.ui.graphics.Color
 
 
 @Composable
-fun ExerciseCard(exercise: ExcersiceItem , onExerciseClick: (ExcersiceItem) -> Unit = {}) {
-
-    val context = LocalContext.current
-
+fun ExerciseCard(
+    exercise: ExcersiceItem,
+    onExerciseClick: (ExcersiceItem) -> Unit = {}
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-                Toast.makeText(context, "Clicked on ${exercise.name}", Toast.LENGTH_SHORT).show()
-                onExerciseClick(exercise)
-            },
+            .clickable { onExerciseClick(exercise) },
         shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF222222)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            AsyncImage(
-                model = exercise.gifUrl,
-                contentDescription = exercise.name,
-                contentScale = ContentScale.Crop,
+        Column {
+            // Placeholder for exercise image
+            Box(
                 modifier = Modifier
-                    .height(120.dp)
                     .fillMaxWidth()
-            )
-            Spacer(Modifier.height(8.dp))
+                    .height(120.dp)
+            ) {
+                // Add your image loading here
+            }
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = exercise.name,
                 modifier = Modifier.padding(8.dp),
-                fontWeight = FontWeight.Medium
+                style = MaterialTheme.typography.bodyMedium.copy(color = Color.White)
             )
         }
     }
