@@ -26,8 +26,6 @@ import androidx.navigation.NavController
 import com.example.gymify.domain.models.ExcersiceItem
 import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color
-import com.example.gymify.ui.theme.BackgroundDark
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -50,6 +48,15 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Card
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import com.example.gymify.data.local.appDataBase.ExerciseEntity
+import com.example.gymify.data.local.planDB.PlanExerciseEntity
 
 
 @Composable
@@ -62,16 +69,19 @@ fun ExercisesScreen(
     val exercisesItems by viewModel.exerciseList.observeAsState(emptyList())
     val error by viewModel.errorMessage.observeAsState()
 
-    val categories = listOf("Beginner", "Intermediate", "Advance")
+    var selectedFilter by remember { mutableStateOf("All") }
+    var searchQuery by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
-    ) {
+    val filteredExercises = exercisesItems.filter { exercise ->
+        val matchesFilter = selectedFilter == "All" || exercise.target.equals(selectedFilter, ignoreCase = true)
+        val matchesSearch = exercise.name.contains(searchQuery, ignoreCase = true)
+        matchesFilter && matchesSearch
+    }
+
+    Column(modifier.fillMaxSize().padding(16.dp)) {
+        // Greeting Section
         Text(
-            text = "Hello Omar,",
+            text = "Hello Azeem,",
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -86,6 +96,7 @@ fun ExercisesScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // Today Workout Plan Section
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -106,62 +117,7 @@ fun ExercisesScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = PrimaryDark),
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                AsyncImage(
-                    model = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2ApDrsEvZs-MhOZEBx3b93hrxesTY6S6q6Q&s",
-                    contentDescription = "Today's Workout Plan",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f))
-                )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Text(
-                        text = "Day 01 - Warm Up",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row {
-                        Text(
-                            text = "07:00",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "08:00 AM",
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // workout
+        // Workout Categories Section
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -182,41 +138,34 @@ fun ExercisesScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Category Chips
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.horizontalScroll(rememberScrollState())
         ) {
-            FilterChip(
-                selected = true,
-                onClick = { /* Handle selection */ },
-                label = { Text("Beginner") },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = Purple40,
-                    labelColor = TextLight
-                )
+            val categories = listOf(
+                "All", "abductors", "abs", "adductors", "biceps", "calves",
+                "cardiovascular system", "delts", "forearms", "glutes", "hamstrings",
+                "lats", "levator scapulae", "pectorals", "quads", "serratus anterior",
+                "spine", "traps", "triceps", "upper back"
             )
-            FilterChip(
-                selected = false,
-                onClick = { /* Handle selection */ },
-                label = { Text("Intermediate") },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = PurpleGrey40,
-                    labelColor = TextLight
+
+            categories.forEach { category ->
+                FilterChip(
+                    selected = selectedFilter == category,
+                    onClick = { selectedFilter = category },
+                    label = { Text(category) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        containerColor = if (selectedFilter == category) Purple40 else PurpleGrey40,
+                        labelColor = TextLight
+                    )
                 )
-            )
-            FilterChip(
-                selected = false,
-                onClick = { /* Handle selection */ },
-                label = { Text("Advance") },
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = PurpleGrey40,
-                    labelColor = TextLight
-                )
-            )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Featured Workout Card
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -225,8 +174,9 @@ fun ExercisesScreen(
             colors = CardDefaults.cardColors(containerColor = Color(0xFF222222)),
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
+                // Placeholder for featured workout image
                 AsyncImage(
-                    model = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3U-nc9ijppnD7HyZn_u5JvFKZKPcCzFwGYw&s",
+                    model = "https://example.com/featured-workout.jpg",
                     contentDescription = "Featured Workout",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -257,22 +207,14 @@ fun ExercisesScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text(
-            text = "New Workouts",
-            style = MaterialTheme.typography.titleLarge.copy(
-                color = MaterialTheme.colorScheme.onBackground
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
+        // Exercises Grid
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(exercisesItems) { exercise ->
+            items(filteredExercises) { exercise ->
                 ExerciseCard(exercise = exercise, onExerciseClick = onExerciseClick)
             }
         }

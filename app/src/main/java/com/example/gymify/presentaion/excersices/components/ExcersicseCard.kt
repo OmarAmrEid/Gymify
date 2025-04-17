@@ -24,33 +24,36 @@ import androidx.compose.material3.*
 import androidx.compose.ui.graphics.Color
 
 
+
 @Composable
-fun ExerciseCard(
-    exercise: ExcersiceItem,
-    onExerciseClick: (ExcersiceItem) -> Unit = {}
-) {
+fun ExerciseCard(exercise: ExcersiceItem , onExerciseClick: (ExcersiceItem) -> Unit = {}) {
+
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onExerciseClick(exercise) },
+            .clickable {
+                Toast.makeText(context, "Clicked on ${exercise.name}", Toast.LENGTH_SHORT).show()
+                onExerciseClick(exercise)
+            },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF222222)),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column {
-            // Placeholder for exercise image
-            Box(
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            AsyncImage(
+                model = exercise.gifUrl,
+                contentDescription = exercise.name,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .height(120.dp)
-            ) {
-                // Add your image loading here
-            }
-            Spacer(modifier = Modifier.height(8.dp))
+                    .fillMaxWidth()
+            )
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = exercise.name,
                 modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.bodyMedium.copy(color = Color.White)
+                fontWeight = FontWeight.Medium
             )
         }
     }
