@@ -11,32 +11,44 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-// Light Theme Colors
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    onPrimary = TextLight,
-    secondary = PurpleGrey40,
-    onSecondary = TextLight,
-    tertiary = Pink40,
-    onTertiary = TextLight,
-    background = BackgroundLight,
-    surface = PurpleGrey80,
-    onBackground = TextDark,
-    onSurface = TextDark,
+    primary = LightPrimary,
+    primaryContainer = LightPrimaryContainer,
+    secondary = LightSecondary,
+    secondaryContainer = LightSecondaryContainer,
+    tertiary = LightTertiary,
+    tertiaryContainer = LightTertiaryContainer,
+    background = LightBackground,
+    surface = LightSurface,
+    error = LightError,
+    errorContainer = LightErrorContainer,
+    onPrimary = LightTextPrimary,
+    onSecondary = LightTextPrimary,
+    onTertiary = LightTextPrimary,
+    onBackground = LightTextPrimary,
+    onSurface = LightTextPrimary,
+    onError = LightTextPrimary,
+    onErrorContainer = LightTextPrimary
 )
 
-// Dark Theme Colors
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    onPrimary = TextLight,
-    secondary = PurpleGrey80,
-    onSecondary = TextLight,
-    tertiary = Pink80,
-    onTertiary = TextLight,
-    background = BackgroundDark,
-    surface = PurpleGrey80,
-    onBackground = TextLight,
-    onSurface = TextLight,
+    primary = DarkPrimary,
+    primaryContainer = DarkPrimaryContainer,
+    secondary = DarkSecondary,
+    secondaryContainer = DarkSecondaryContainer,
+    tertiary = DarkTertiary,
+    tertiaryContainer = DarkTertiaryContainer,
+    background = DarkBackground,
+    surface = DarkSurface,
+    error = DarkError,
+    errorContainer = DarkErrorContainer,
+    onPrimary = DarkTextPrimary,
+    onSecondary = DarkTextPrimary,
+    onTertiary = DarkTextPrimary,
+    onBackground = DarkTextPrimary,
+    onSurface = DarkTextPrimary,
+    onError = DarkTextPrimary,
+    onErrorContainer = DarkTextPrimary
 )
 
 @Composable
@@ -46,11 +58,9 @@ fun GymifyTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
         darkTheme -> DarkColorScheme
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+            dynamicLightColorScheme(LocalContext.current)
         else -> LightColorScheme
     }
 
