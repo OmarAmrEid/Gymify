@@ -44,18 +44,14 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.gymify.domain.models.ExcersiceItem
 import com.example.gymify.presentaion.plan.PlanViewModel
-import com.example.gymify.ui.theme.LightPrimary
-import com.example.gymify.ui.theme.LightSecondary
-import com.example.gymify.ui.theme.LightSecondaryContainer
-import com.example.gymify.ui.theme.LightTextPrimary
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import androidx.compose.foundation.background
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import com.example.gymify.ui.theme.DarkPrimary
+import com.example.gymify.ui.theme.DarkSecondaryContainer
+import com.example.gymify.ui.theme.DarkTextPrimary
+import com.example.gymify.ui.theme.DarkTextSecondary
 
 
 @Composable
@@ -130,7 +126,13 @@ fun ExercisesScreen(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 label = { Text("Search exercises") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.secondary,
+                    focusedLabelColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onBackground
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -152,8 +154,8 @@ fun ExercisesScreen(
                         onClick = { selectedFilter = category },
                         label = { Text(category) },
                         colors = FilterChipDefaults.filterChipColors(
-                            containerColor = if (selectedFilter == category) LightPrimary else LightSecondaryContainer,
-                            labelColor = if (selectedFilter == category) LightTextPrimary else LightSecondary
+                            containerColor = if (selectedFilter == category) DarkPrimary else DarkSecondaryContainer,
+                            labelColor = if (selectedFilter == category) DarkTextPrimary else DarkTextSecondary
                         )
                     )
                 }
@@ -161,7 +163,6 @@ fun ExercisesScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -192,12 +193,11 @@ private fun FeaturedExerciseCard(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Placeholder for exercise image
             AsyncImage(
                 model = exercise.gifUrl,
                 contentDescription = exercise.name,
@@ -211,13 +211,13 @@ private fun FeaturedExerciseCard(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        brush = Brush.linearGradient(
+                        brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+                                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                             ),
-                            start = Offset(0.5f, 0f),
-                            end = Offset(0.5f, 1f)
+                            startY = 0f,
+                            endY = 160f
                         )
                     )
             )
@@ -246,46 +246,43 @@ private fun ExerciseGridCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(220.dp) // Increased total card height
+            .height(220.dp)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Image takes up more space
             AsyncImage(
                 model = exercise.gifUrl,
                 contentDescription = exercise.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(180.dp) // Increased image height
+                    .height(180.dp)
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp, bottomStart = 0.dp, bottomEnd = 0.dp))
             )
 
-            // Gradient overlay for the bottom part
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(60.dp) // Overlay height
+                    .height(60.dp)
                     .align(Alignment.BottomCenter)
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 Color.Transparent,
-                                MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+                                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                             ),
                             startY = 0f,
-                            endY = 60f // Match the height of the box
+                            endY = 60f
                         ),
                         shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
                     )
             )
 
-            // Exercise name text
             Text(
                 text = exercise.name,
                 style = MaterialTheme.typography.titleMedium,
