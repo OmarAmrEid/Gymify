@@ -246,7 +246,7 @@ private fun ExerciseGridCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(220.dp) // Increased total card height
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
@@ -255,37 +255,46 @@ private fun ExerciseGridCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Placeholder for exercise image
+            // Image takes up more space
             AsyncImage(
                 model = exercise.gifUrl,
                 contentDescription = exercise.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .height(160.dp)
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
+                    .height(180.dp) // Increased image height
+                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp, bottomStart = 0.dp, bottomEnd = 0.dp))
             )
 
-            // Semi-transparent box for exercise name
+            // Gradient overlay for the bottom part
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp)
+                    .height(60.dp) // Overlay height
                     .align(Alignment.BottomCenter)
                     .background(
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.Transparent,
+                                MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+                            ),
+                            startY = 0f,
+                            endY = 60f // Match the height of the box
+                        ),
                         shape = RoundedCornerShape(bottomStart = 12.dp, bottomEnd = 12.dp)
                     )
-                    .padding(horizontal = 8.dp, vertical = 8.dp)
-            ) {
-                Text(
-                    text = exercise.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    maxLines = 1,
-                    modifier = Modifier.align(Alignment.CenterStart)
-                )
-            }
+            )
+
+            // Exercise name text
+            Text(
+                text = exercise.name,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 12.dp, bottom = 12.dp),
+                maxLines = 1
+            )
         }
     }
 }
