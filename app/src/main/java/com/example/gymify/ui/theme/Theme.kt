@@ -33,21 +33,18 @@ private val LightColorScheme = lightColorScheme(
 
 private val DarkColorScheme = darkColorScheme(
     primary = DarkPrimary,
-    primaryContainer = DarkPrimaryContainer,
-    secondary = DarkSecondary,
-    secondaryContainer = DarkSecondaryContainer,
-    tertiary = DarkTertiary,
-    tertiaryContainer = DarkTertiaryContainer,
-    background = DarkBackground,
-    surface = DarkSurface,
-    error = DarkError,
-    errorContainer = DarkErrorContainer,
     onPrimary = DarkTextPrimary,
+    secondary = DarkSecondary,
     onSecondary = DarkTextPrimary,
+    tertiary = DarkTertiary,
     onTertiary = DarkTextPrimary,
+    background = DarkBackground,
     onBackground = DarkTextPrimary,
+    surface = DarkSurface,
     onSurface = DarkTextPrimary,
+    error = DarkError,
     onError = DarkTextPrimary,
+    errorContainer = DarkErrorContainer,
     onErrorContainer = DarkTextPrimary
 )
 

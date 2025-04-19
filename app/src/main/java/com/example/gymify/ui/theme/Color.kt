@@ -35,14 +35,14 @@ val LightTextPrimary = Color.Black
 val LightTextSecondary = Color.Gray
 
 // Dark Theme Colors
-val DarkPrimary = Color(0xFFD0BCFF)
-val DarkPrimaryContainer = Color(0xFF4F378B)
-val DarkSecondary = Color(0xFFCCC2DC)
-val DarkSecondaryContainer = Color(0xFF4A4258)
-val DarkTertiary = Color(0xFFEFB8C8)
-val DarkTertiaryContainer = Color(0xFF633B45)
-val DarkBackground = Color.Black
-val DarkSurface = Color(0xFF222222)
+val DarkPrimary = Color(0xFFFF5252)
+val DarkPrimaryContainer = Color(0xFFFFCDD2)
+val DarkSecondary = Color(0xFF222222)
+val DarkSecondaryContainer = Color(0xFF333333)
+val DarkTertiary = Color(0xFF444444)
+val DarkTertiaryContainer = Color(0xFF555555)
+val DarkBackground = Color(0xFF121212)
+val DarkSurface = Color(0xFF1E1E1E)
 val DarkError = Color(0xFFF2B8B4)
 val DarkErrorContainer = Color(0xFF81312E)
 val DarkTextPrimary = Color.White
