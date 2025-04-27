@@ -21,7 +21,6 @@ import coil.compose.AsyncImage
 import com.example.gymify.domain.models.ExcersiceItem
 import dagger.hilt.android.qualifiers.ApplicationContext
 import androidx.compose.material3.*
-import androidx.compose.ui.graphics.Color
 
 
 

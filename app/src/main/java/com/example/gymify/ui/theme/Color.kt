@@ -34,7 +34,7 @@ val LightErrorContainer = Color(0xFFF2B8B4)
 val LightTextPrimary = Color.Black
 val LightTextSecondary = Color.Gray
 
-// Dark Theme Colors
+// Dark Theme Color
 val DarkPrimary = Color(0xFFFF5252)
 val DarkPrimaryContainer = Color(0xFFFFCDD2)
 val DarkSecondary = Color(0xFF222222)

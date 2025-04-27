@@ -80,7 +80,7 @@ fun ExercisesScreen(
 
     Column(modifier.fillMaxSize().padding(16.dp)) {
 
-        // Header Section
+        // Header Sections
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()

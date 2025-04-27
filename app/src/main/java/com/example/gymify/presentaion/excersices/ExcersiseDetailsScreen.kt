@@ -5,7 +5,6 @@ import android.R.attr.paddingTop
 import android.media.Image
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import android.util.Log
 import android.widget.ImageView
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable

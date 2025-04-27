@@ -1,7 +1,6 @@
 package com.example.gymify.ui.theme
 
 import android.os.Build
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
