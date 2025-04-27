@@ -50,3 +50,9 @@ val DarkTextSecondary = Color(0xFF9C9C9C)
 
 val RedAccentLight = Color(0xFFFF5252)
 val RedAccentDark = Color(0xFFFFCDD2)
+
+val PrimaryRed = Color(0xFFFF2424)
+val PrimaryText = Color(0xFFFFFFFF)
+val SurfaceDark = Color(0xFF2C2C2E)
+val SecondaryText = Color(0xFFE5E5E5)
+val DividerColor = Color(0xFF404040)
