@@ -95,7 +95,7 @@ fun ExercisesScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Featured Random Workouts Banner
+        // Featured Random Workouts Banners
         Text(
             text = "Featured Workouts",
             style = MaterialTheme.typography.titleMedium,

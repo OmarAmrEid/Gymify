@@ -47,7 +47,6 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.gymify.data.local.planDB.PlanExerciseEntity
-import com.example.gymify.domain.models.ExcersiceItem
 import com.example.gymify.presentaion.plan.PlanViewModel
 
 

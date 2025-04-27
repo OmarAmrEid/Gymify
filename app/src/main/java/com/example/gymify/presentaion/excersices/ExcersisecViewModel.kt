@@ -116,7 +116,7 @@ class ExcersisecViewModel @Inject constructor(
         bodyPart = bodyPart,
         equipment = equipment
     )
-    
+
     fun ExerciseEntity.toModel(): ExcersiceItem = ExcersiceItem(
         id = id,
         name = name,
